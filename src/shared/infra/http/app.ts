@@ -2,9 +2,9 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import '@shared/container';
 
+import cors from 'cors';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-
 import 'express-async-errors';
 
 import createConnection from '@shared/infra/typeorm';
@@ -22,6 +22,8 @@ app.use(express.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 app.use('/uploads', express.static(`${uploadConfig.tmpFolder}`));
+
+app.use(cors());
 app.use(router);
 
 app.use(errorTratment);
