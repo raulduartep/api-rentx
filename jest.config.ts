@@ -8,6 +8,7 @@ export default {
 
   // Stop running tests after `n` failures
   bail: true,
+  setupFiles: ['dotenv/config'],
 
   // The directory where Jest should store its cached dependency information
   // cacheDirectory: "/tmp/jest_rs",
