@@ -23,6 +23,11 @@ jobs:
       - name: Build
         run: yarn build
         
+      - name: Test
+        run: yarn test:ci
+        env: 
+          NODE_ENV: test
+        
       - uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
