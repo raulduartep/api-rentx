@@ -1,5 +1,8 @@
+import 'reflect-metadata';
 import { hash } from 'bcrypt';
+import { RedisClient } from 'redis';
 import request from 'supertest';
+import { container } from 'tsyringe';
 import { Connection } from 'typeorm';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -7,7 +10,8 @@ import { app } from '@shared/infra/http/app';
 import createConnection from '@shared/infra/typeorm';
 
 let connection: Connection;
-let refresh_token: string;
+let token: string;
+const redisClient = container.resolve<RedisClient>('RedisClient');
 
 describe('Create Category Controller', () => {
   beforeAll(async () => {
@@ -28,12 +32,17 @@ describe('Create Category Controller', () => {
       password: 'admin',
     });
 
-    refresh_token = responseToken.body.refresh_token;
+    token = responseToken.body.token;
   });
 
   afterAll(async () => {
     await connection.dropDatabase();
     await connection.close();
+    await new Promise<void>(resolve => {
+      redisClient.quit(() => {
+        resolve();
+      });
+    });
   });
 
   it('Should be able to list all categories', async () => {
@@ -44,7 +53,7 @@ describe('Create Category Controller', () => {
         description: 'Category Supertest',
       })
       .set({
-        Authorization: `Bearer ${refresh_token}`,
+        Authorization: `Bearer ${token}`,
       });
 
     const response = await request(app).get('/categories');

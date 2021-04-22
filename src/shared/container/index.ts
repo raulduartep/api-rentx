@@ -1,3 +1,4 @@
+import { RedisClient, createClient } from 'redis';
 import { container } from 'tsyringe';
 
 import { UsersRepository } from '@modules/accounts/infra/typeorm/repositories/UsersRepository';
@@ -47,4 +48,12 @@ container.registerSingleton<IRentalsRepository>(
 container.registerSingleton<IUsersTokensRepository>(
   'UsersTokensRepository',
   UsersTokensRepository
+);
+
+container.registerInstance<RedisClient>(
+  'RedisClient',
+  createClient({
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT),
+  })
 );

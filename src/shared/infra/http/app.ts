@@ -25,6 +25,7 @@ app.use(rateLimiter);
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
+  enabled: process.env.NODE_ENV !== 'test',
   integrations: [
     new Sentry.Integrations.Http({ tracing: true }),
     new Tracing.Integrations.Express({ app }),
