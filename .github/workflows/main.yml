@@ -18,7 +18,7 @@ jobs:
           node-version: 14.x
       
       - name: Install Dependencies
-        run: yarn install --production
+        run: yarn
         
       - name: Build
         run: yarn build
@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/app/api-rentx
-            yarn install --production
+            yarn
             ./node_modules/bin/typeorm migration:run
             pm2 restart rentx_api
             
